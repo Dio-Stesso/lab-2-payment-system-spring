@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/paymentsystem
+    username: paymentuser
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+keycloak:
+  realm: PaymentSystem
+  auth-server-url: http://localhost:8080/auth
+  resource: paymentsystem-client
+  credentials:
+    secret: your-client-secret
+  bearer-only: true
+  realm-key: "your-realm-key"
+
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/auth/realms/PaymentSystem/protocol/openid-connect/certs

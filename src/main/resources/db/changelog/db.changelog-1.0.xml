@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="yourname">
+        <createTable tableName="clients">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="credit_cards">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="card_number" type="varchar(16)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="expiry_date" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cvv" type="varchar(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="accounts">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="balance" type="decimal(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_card_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="payments">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="amount" type="decimal(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipient" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="credit_cards"
+                                 baseColumnNames="client_id"
+                                 constraintName="fk_credit_cards_clients"
+                                 referencedTableName="clients"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="accounts"
+                                 baseColumnNames="credit_card_id"
+                                 constraintName="fk_accounts_credit_cards"
+                                 referencedTableName="credit_cards"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="payments"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_payments_accounts"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
